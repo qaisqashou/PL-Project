@@ -1,0 +1,419 @@
+money totalExpenses(transaction[] items) {
+
+Lexeme             | Token 
+money              | type keyword
+totalExpenses      | identifier
+(                  | separator
+transaction        | type keyword
+[                  | separator
+]                  | separator
+items              | identifier
+)                  | separator
+{                  | separator
+
+======
+money total = $0;
+
+Lexeme             | Token 
+money              | type keyword
+total              | identifier
+=                  | operator
+$0                 | money literal
+;                  | separator
+
+======
+foreach (transaction t in items) {
+
+Lexeme             | Token 
+foreach            | keyword
+(                  | separator
+transaction        | type keyword
+t                  | identifier
+in                 | keyword
+items              | identifier
+)                  | separator
+{                  | separator
+
+======
+if (t.kind == "expense") {
+
+Lexeme             | Token 
+if                 | keyword
+(                  | separator
+t                  | identifier
+.                  | operator
+kind               | identifier
+==                 | operator
+"expense"          | string literal
+)                  | separator
+{                  | separator
+
+======
+total = total + t.amount;
+
+Lexeme             | Token 
+total              | identifier
+=                  | operator
+total              | identifier
++                  | operator
+t                  | identifier
+.                  | operator
+amount             | identifier
+;                  | separator
+
+======
+}
+
+Lexeme             | Token 
+}                  | separator
+
+======
+}
+
+Lexeme             | Token 
+}                  | separator
+
+======
+return total;
+
+Lexeme             | Token 
+return             | keyword
+total              | identifier
+;                  | separator
+
+======
+}
+
+Lexeme             | Token 
+}                  | separator
+
+======
+money monthlyIncome = $3000;
+
+Lexeme             | Token 
+money              | type keyword
+monthlyIncome      | identifier
+=                  | operator
+$3000              | money literal
+;                  | separator
+
+======
+money rentLimit = $1200;
+
+Lexeme             | Token 
+money              | type keyword
+rentLimit          | identifier
+=                  | operator
+$1200              | money literal
+;                  | separator
+
+======
+transaction rent;
+
+Lexeme             | Token 
+transaction        | type keyword
+rent               | identifier
+;                  | separator
+
+======
+rent.amount = $1100;
+
+Lexeme             | Token 
+rent               | identifier
+.                  | operator
+amount             | identifier
+=                  | operator
+$1100              | money literal
+;                  | separator
+
+======
+rent.category = "housing";
+
+Lexeme             | Token 
+rent               | identifier
+.                  | operator
+category           | identifier
+=                  | operator
+"housing"          | string literal
+;                  | separator
+
+======
+rent.kind = "expense";
+
+Lexeme             | Token 
+rent               | identifier
+.                  | operator
+kind               | identifier
+=                  | operator
+"expense"          | string literal
+;                  | separator
+
+======
+rent.note = "May rent";
+
+Lexeme             | Token 
+rent               | identifier
+.                  | operator
+note               | identifier
+=                  | operator
+"May rent"         | string literal
+;                  | separator
+
+======
+transaction salary;
+
+Lexeme             | Token 
+transaction        | type keyword
+salary             | identifier
+;                  | separator
+
+======
+salary.amount = $3000;
+
+Lexeme             | Token 
+salary             | identifier
+.                  | operator
+amount             | identifier
+=                  | operator
+$3000              | money literal
+;                  | separator
+
+======
+salary.category = "job";
+
+Lexeme             | Token 
+salary             | identifier
+.                  | operator
+category           | identifier
+=                  | operator
+"job"              | string literal
+;                  | separator
+
+======
+salary.kind = "income";
+
+Lexeme             | Token 
+salary             | identifier
+.                  | operator
+kind               | identifier
+=                  | operator
+"income"           | string literal
+;                  | separator
+
+======
+salary.note = "Monthly salary";
+
+Lexeme             | Token 
+salary             | identifier
+.                  | operator
+note               | identifier
+=                  | operator
+"Monthly salary"   | string literal
+;                  | separator
+
+======
+budget "Rent" rentLimit;
+
+Lexeme             | Token 
+budget             | keyword
+"Rent"             | string literal
+rentLimit          | identifier
+;                  | separator
+
+======
+track rent;
+
+Lexeme             | Token 
+track              | keyword
+rent               | identifier
+;                  | separator
+
+======
+track salary;
+
+Lexeme             | Token 
+track              | keyword
+salary             | identifier
+;                  | separator
+
+======
+transaction[] records = [rent, salary];
+
+Lexeme             | Token 
+transaction        | type keyword
+[                  | separator
+]                  | separator
+records            | identifier
+=                  | operator
+[                  | separator
+rent               | identifier
+,                  | separator
+salary             | identifier
+]                  | separator
+;                  | separator
+
+======
+money spent = totalExpenses(records);
+
+Lexeme             | Token 
+money              | type keyword
+spent              | identifier
+=                  | operator
+totalExpenses      | identifier
+(                  | separator
+records            | identifier
+)                  | separator
+;                  | separator
+
+======
+if (spent > rentLimit) {
+
+Lexeme             | Token 
+if                 | keyword
+(                  | separator
+spent              | identifier
+>                  | operator
+rentLimit          | identifier
+)                  | separator
+{                  | separator
+
+======
+transaction mylife;
+
+Lexeme             | Token 
+transaction        | type keyword
+mylife             | identifier
+;                  | separator
+
+======
+mylife.amount = $50;
+
+Lexeme             | Token 
+mylife             | identifier
+.                  | operator
+amount             | identifier
+=                  | operator
+$50                | money literal
+;                  | separator
+
+======
+mylife.category = "warning";
+
+Lexeme             | Token 
+mylife             | identifier
+.                  | operator
+category           | identifier
+=                  | operator
+"warning"          | string literal
+;                  | separator
+
+======
+mylife.kind = "expense";
+
+Lexeme             | Token 
+mylife             | identifier
+.                  | operator
+kind               | identifier
+=                  | operator
+"expense"          | string literal
+;                  | separator
+
+======
+mylife.note = "Over budget";
+
+Lexeme             | Token 
+mylife             | identifier
+.                  | operator
+note               | identifier
+=                  | operator
+"Over budget"      | string literal
+;                  | separator
+
+======
+track mylife;
+
+Lexeme             | Token 
+track              | keyword
+mylife             | identifier
+;                  | separator
+
+======
+} else {
+
+Lexeme             | Token 
+}                  | separator
+else               | keyword
+{                  | separator
+
+======
+budget "Status" spent;
+
+Lexeme             | Token 
+budget             | keyword
+"Status"           | string literal
+spent              | identifier
+;                  | separator
+
+======
+}
+
+Lexeme             | Token 
+}                  | separator
+
+=====
+int month = 5;
+
+Lexeme             | Token
+int                | type keyword
+month              | identifier
+=                  | operator
+5                  | int literal
+;                  | separator
+
+=====
+switch (month) {
+
+Lexeme             | Token
+switch             | keyword
+(                  | separator
+month              | identifier
+)                  | separator
+{                  | separator
+
+=====
+case 5:
+
+Lexeme             | Token
+case               | keyword
+5                  | int literal
+:                  | separator
+
+=====
+budget "Month" monthlyIncome;
+
+Lexeme             | Token
+budget             | keyword
+"Month"            | string literal
+monthlyIncome      | identifier
+;                  | separator
+
+=====
+default:
+
+Lexeme             | Token
+default            | keyword
+:                  | separator
+
+=====
+track salary;
+
+Lexeme             | Token
+track              | keyword
+salary             | identifier
+;                  | separator
+
+=====
+}
+
+Lexeme             | Token
+}                  | separator

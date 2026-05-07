@@ -1,0 +1,61 @@
+money totalExpenses(transaction[] items) {
+    money total = $0;
+
+    foreach (transaction t in items) {
+        if (t.kind == "expense") {
+            total = total + t.amount;
+        }
+    }
+
+    return total;
+}
+
+money monthlyIncome = $3000;
+money rentLimit = $1200;
+
+transaction rent;
+
+rent.amount = $1100;
+rent.category = "housing";
+rent.kind = "expense";
+rent.note = "May rent";
+
+
+transaction salary;
+
+salary.amount = $3000;
+salary.category = "job";
+salary.kind = "income";
+salary.note = "Monthly salary";
+
+
+budget "Rent" rentLimit;
+track rent;
+track salary;
+
+transaction[] records = [rent, salary];
+
+money spent = totalExpenses(records);
+
+if (spent > rentLimit) {
+    transaction mylife;
+
+    mylife.amount = $50;
+    mylife.category = "warning";
+    mylife.kind = "expense";
+    mylife.note = "Over budget";
+
+    track mylife;
+} else {
+    budget "Status" spent;
+}
+
+int month = 5;
+
+switch (month) {
+    case 5:
+        budget "Month" monthlyIncome;
+    default:
+        track salary;
+}
+

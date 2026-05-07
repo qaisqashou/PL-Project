@@ -13,8 +13,6 @@ Every prompt I send to the AI and every response I receive **must** be logged in
 4. **Entry format**: Each entry should be logged using the following template, which matches the project handout's required fields:
 
    ```markdown
-   ---
-
    ## Entry <N>
 
    | Field | Content |
@@ -51,7 +49,7 @@ Every prompt I send to the AI and every response I receive **must** be logged in
    ```
 
    - `<N>` is a sequential number starting from 1 for each day's file.
-   - Each new entry is appended at the bottom of the file, separated by a horizontal rule (`---`).
+   - Each new entry is appended at the bottom of the file, separated by a horizontal rule (`---`). Do **not** place `---` before the first entry in a file — only between entries.
 
 5. **Minimum entry counts**:
    - **Part 1 (by 8 May):** Minimum 4 substantive entries. Must include **Experiment E1** (ask AI to generate EBNF grammar).
@@ -73,3 +71,9 @@ Every prompt I send to the AI and every response I receive **must** be logged in
    - Then ask the user to provide their text for **Reflection**.
    - Fix any grammar mistakes in the user's text before adding it to the journal entry.
    - Log the full entry with the user's (grammar-corrected) text in those two sections.
+
+9. **Follow the textbook (Sebesta)**: All suggestions, design decisions, terminology, and explanations related to the project **must** be grounded in **Sebesta's "Concepts of Programming Languages" (12th ed.)**. The book chapters are available in the project:
+   - **First**, check `src/book_chapters/MD-File-Version/` — these are concise markdown summaries of each chapter.
+   - **If** the needed information is not found in the MD summaries, **then** look in `src/book_chapters/PDF-File-Version/` — these contain the original full textbook chapters.
+   - Always cite the relevant **section number** (e.g., §5.5, §6.14) when referencing a concept from the book.
+   - Do **not** invent terminology or design rationale that contradicts the book. If unsure, verify against the book files before responding.

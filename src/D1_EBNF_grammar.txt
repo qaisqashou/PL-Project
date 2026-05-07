@@ -1,0 +1,101 @@
+
+<program> ::= { <function_declaration> | <statement> }
+
+<function_declaration> ::= <type> <identifier> "(" [ <parameter_list> ] ")" <block>
+
+<parameter_list> ::= <parameter> { "," <parameter> }
+
+<parameter> ::= <type> <identifier>
+
+<type> ::= "money"
+         | "int"
+         | "string"
+         | "transaction"
+         | "transaction" "[" "]"
+
+<block> ::= "{" { <statement> } "}"
+
+<statement> ::= <var_declaration>
+              | <assignment_stmt>
+              | <field_assignment_stmt>
+              | <if_stmt>
+              | <foreach_stmt>
+              | <switch_stmt>
+              | <return_stmt>
+              | <budget_stmt>
+              | <track_stmt>
+              | <call_stmt>
+
+<var_declaration> ::= <type> <identifier> [ "=" <expression> ] ";"
+
+<assignment_stmt> ::= <identifier> "=" <expression> ";"
+
+<field_assignment_stmt> ::= <identifier> "." <identifier> "=" <expression> ";"
+
+<if_stmt> ::= "if" "(" <expression> ")" <block>
+            | "if" "(" <expression> ")" <block> "else" <block>
+
+<foreach_stmt> ::= "foreach" "(" <type> <identifier> "in" <expression> ")" <block>
+
+<switch_stmt> ::= "switch" "(" <expression> ")" "{"
+                  { <case_clause> }
+                  [ <default_clause> ]
+                  "}"
+
+<case_clause> ::= "case" <case_value> ":" { <statement> }
+
+<default_clause> ::= "default" ":" { <statement> }
+
+<case_value> ::= <int_literal> | <string_literal>
+
+<return_stmt> ::= "return" <expression> ";"
+
+<budget_stmt> ::= "budget" <string_literal> <expression> ";"
+
+<track_stmt> ::= "track" <expression> ";"
+
+<call_stmt> ::= <function_call> ";"
+
+<expression> ::= <equality_expr>
+
+<equality_expr> ::= <relational_expr> { ( "==" | "!=" ) <relational_expr> }
+
+<relational_expr> ::= <additive_expr> { ( "<" | "<=" | ">" | ">=" ) <additive_expr> }
+
+<additive_expr> ::= <multiplicative_expr> { ( "+" | "-" ) <multiplicative_expr> }
+
+<multiplicative_expr> ::= <postfix_expr> { ( "*" | "/" ) <postfix_expr> }
+
+<postfix_expr> ::= <primary_expr> { "." <identifier> }
+
+<primary_expr> ::= <money_literal>
+                 | <int_literal>
+                 | <string_literal>
+                 | <identifier_expr>
+                 | <array_literal>
+                 | "(" <expression> ")"
+
+<identifier_expr> ::= <identifier> [ "(" [ <argument_list> ] ")" ]
+
+<function_call> ::= <identifier> "(" [ <argument_list> ] ")"
+
+<argument_list> ::= <expression> { "," <expression> }
+
+<array_literal> ::= "[" [ <argument_list> ] "]"
+
+<identifier> ::= letter { letter | digit | "_" }
+
+<money_literal> ::= "$" digit { digit }
+
+<int_literal> ::= digit { digit }
+
+<string_literal> ::= '"' { <string_character> } '"'
+
+<string_character> ::= letter | digit | " " | "_"
+
+Notes:
+1. This grammar is written for the Part 1 subset only.
+2. Operator precedence is encoded directly in the grammar:
+   postfix > multiplicative > additive > relational > equality.
+3. Assignment is a statement, not an expression.
+4. The optional "else" is attached to the nearest unmatched "if".

@@ -1,0 +1,173 @@
+BudgetLang Part 1 - BNF Grammar Draft
+
+<program> ::= <program_item_list>
+
+<program_item_list> ::= <program_item> <program_item_list>
+                      | <empty>
+
+<program_item> ::= <function_decl>
+                 | <statement>
+
+<function_decl> ::= <type> <identifier> "(" <optional_parameter_list> ")" <block>
+
+<optional_parameter_list> ::= <parameter_list>
+                            | <empty>
+
+<parameter_list> ::= <parameter> <parameter_list_tail>
+
+<parameter_list_tail> ::= "," <parameter> <parameter_list_tail>
+                        | <empty>
+
+<parameter> ::= <type> <identifier>
+
+<type> ::= "money"
+         | "int"
+         | "string"
+         | "transaction"
+         | "transaction" "[" "]"
+
+<block> ::= "{" <statement_list> "}"
+
+<statement_list> ::= <statement> <statement_list>
+                   | <empty>
+
+<statement> ::= <var_decl>
+              | <assignment_stmt>
+              | <field_assignment_stmt>
+              | <if_stmt>
+              | <foreach_stmt>
+              | <switch_stmt>
+              | <return_stmt>
+              | <budget_stmt>
+              | <track_stmt>
+              | <call_stmt>
+
+<var_decl> ::= <type> <identifier> <optional_initializer> ";"
+
+<optional_initializer> ::= "=" <expression>
+                         | <empty>
+
+<assignment_stmt> ::= <identifier> "=" <expression> ";"
+
+<field_assignment_stmt> ::= <identifier> "." <identifier> "=" <expression> ";"
+
+<if_stmt> ::= "if" "(" <expression> ")" <block> <optional_else>
+
+<optional_else> ::= "else" <block>
+                  | <empty>
+
+<foreach_stmt> ::= "foreach" "(" <type> <identifier> "in" <expression> ")" <block>
+
+<switch_stmt> ::= "switch" "(" <expression> ")" "{" <case_clause_list> <optional_default_clause> "}"
+
+<case_clause_list> ::= <case_clause> <case_clause_list>
+                     | <empty>
+
+<optional_default_clause> ::= <default_clause>
+                            | <empty>
+
+<case_clause> ::= "case" <case_value> ":" <statement_list>
+
+<default_clause> ::= "default" ":" <statement_list>
+
+<case_value> ::= <int_literal>
+               | <string_literal>
+
+<return_stmt> ::= "return" <expression> ";"
+
+<budget_stmt> ::= "budget" <string_literal> <expression> ";"
+
+<track_stmt> ::= "track" <expression> ";"
+
+<call_stmt> ::= <function_call> ";"
+
+<expression> ::= <equality_expr>
+
+<equality_expr> ::= <relational_expr> <equality_expr_tail>
+
+<equality_expr_tail> ::= <equality_op> <relational_expr> <equality_expr_tail>
+                       | <empty>
+
+<equality_op> ::= "=="
+                | "!="
+
+<relational_expr> ::= <additive_expr> <relational_expr_tail>
+
+<relational_expr_tail> ::= <relational_op> <additive_expr> <relational_expr_tail>
+                         | <empty>
+
+<relational_op> ::= "<"
+                  | "<="
+                  | ">"
+                  | ">="
+
+<additive_expr> ::= <multiplicative_expr> <additive_expr_tail>
+
+<additive_expr_tail> ::= <additive_op> <multiplicative_expr> <additive_expr_tail>
+                       | <empty>
+
+<additive_op> ::= "+"
+                | "-"
+
+<multiplicative_expr> ::= <postfix_expr> <multiplicative_expr_tail>
+
+<multiplicative_expr_tail> ::= <multiplicative_op> <postfix_expr> <multiplicative_expr_tail>
+                             | <empty>
+
+<multiplicative_op> ::= "*"
+                      | "/"
+
+<postfix_expr> ::= <primary_expr> <postfix_expr_tail>
+
+<postfix_expr_tail> ::= "." <identifier> <postfix_expr_tail>
+                      | <empty>
+
+<primary_expr> ::= <money_literal>
+                 | <int_literal>
+                 | <string_literal>
+                 | <identifier_expr>
+                 | <array_literal>
+                 | "(" <expression> ")"
+
+<identifier_expr> ::= <identifier> <optional_call_suffix>
+
+<optional_call_suffix> ::= "(" <optional_argument_list> ")"
+                         | <empty>
+
+<function_call> ::= <identifier> "(" <optional_argument_list> ")"
+
+<optional_argument_list> ::= <argument_list>
+                           | <empty>
+
+<argument_list> ::= <expression> <argument_list_tail>
+
+<argument_list_tail> ::= "," <expression> <argument_list_tail>
+                       | <empty>
+
+<array_literal> ::= "[" <optional_argument_list> "]"
+
+<identifier> ::= letter <identifier_tail>
+
+<identifier_tail> ::= letter <identifier_tail>
+                    | digit <identifier_tail>
+                    | "_" <identifier_tail>
+                    | <empty>
+
+<money_literal> ::= "$" digit <digit_tail>
+
+<int_literal> ::= digit <digit_tail>
+
+<digit_tail> ::= digit <digit_tail>
+               | <empty>
+
+<string_literal> ::= '"' <string_char_list> '"'
+
+<string_char_list> ::= <string_character> <string_char_list>
+                     | <empty>
+
+<string_character> ::= letter
+                     | digit
+                     | " "
+                     | "_"
+
+<empty> ::= 
