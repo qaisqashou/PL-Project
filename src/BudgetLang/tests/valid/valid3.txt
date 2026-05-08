@@ -1,0 +1,41 @@
+money totalExpenses(transaction[] items) {
+    money total = $0;
+
+    foreach (transaction t in items) {
+        if (t.kind == "expense") {
+            total = total + t.amount;
+        }
+    }
+
+    return total;
+}
+
+transaction rent;
+rent.amount = $800;
+rent.category = "housing";
+rent.kind = "expense";
+rent.note = "Apartment rent";
+
+transaction transport;
+transport.amount = $120;
+transport.category = "travel";
+transport.kind = "expense";
+transport.note = "Bus card";
+
+transaction[] expenses = [rent, transport];
+money total = totalExpenses(expenses);
+money limit = $1000;
+
+if (total > limit) {
+    transaction alert;
+    alert.amount = $10;
+    alert.category = "warning";
+    alert.kind = "expense";
+    alert.note = "Budget exceeded";
+    track alert;
+} else {
+    budget "Remaining budget" limit;
+}
+
+track rent;
+track transport;

@@ -1,0 +1,4 @@
+transaction rent;
+
+rent. = $800;
+track rent;

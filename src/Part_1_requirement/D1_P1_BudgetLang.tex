@@ -128,6 +128,7 @@ Keywords & Reserved words & \texttt{money}, \texttt{int}, \texttt{string}, \text
 Money literals & \texttt{"\$" digit+} & \texttt{\$0}, \texttt{\$50}, \texttt{\$1200}, \texttt{\$3000} \\
 String literals & Text enclosed in double quotes & \texttt{"Rent"}, \texttt{"expense"}, \texttt{"May rent"}, \texttt{"Status"} \\
 Int literals & \texttt{digit+} & \texttt{5}, \texttt{0}, \texttt{1}, \texttt{9999} \\
+Comments & \texttt{//} followed by the rest of the line & \texttt{// monthly rent entry} \\
 Operators & Fixed operator symbols & \texttt{=}, \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{.}, \texttt{==}, \texttt{!=}, \texttt{<}, \texttt{<=}, \texttt{>}, \texttt{>=} \\
 Separators & Fixed separator symbols & \texttt{( ) \{ \} [ ] ; , :} \\
 \bottomrule
@@ -242,7 +243,7 @@ The syntax of BudgetLang is described below in EBNF, following Sebesta's discuss
 
 <string_literal> ::= '"' { <string_character> } '"'
 
-<string_character> ::= letter | digit | " " | "_"
+<string_character> ::= any character except '"' and newline
 \end{verbatim}
 
 \section*{4.6 Names, Binding, Scope, Lifetime [P1]}
@@ -257,5 +258,8 @@ BudgetLang uses static scope rather than dynamic scope (\S5.5.1). Under static s
 
 \subsection*{Lifetime of Local Variables}
 The lifetime of local variables is stack-dynamic (\S5.4.3, \S5.6). Local variables and parameters are created when control enters their block or function activation and cease to exist when that activation finishes. This choice fits recursive function calls and ordinary block-structured execution. Function declarations themselves have program-wide visibility after parsing, but their activation records and locals are created only when the functions are called.
+
+\subsection*{Internal Truth Values}
+Comparison expressions such as \texttt{spent > rentLimit} and \texttt{t.kind == "expense"} produce internal true/false results that are used by control constructs such as \texttt{if}. In the current Part 1 design, this truth-value result is not a user-declarable source-language type; it is an internal semantic result used to evaluate conditions. This keeps the user-visible type system small while still allowing conditional control flow.
 
 \end{document}

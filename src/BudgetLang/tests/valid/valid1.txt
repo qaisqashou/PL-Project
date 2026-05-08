@@ -1,0 +1,35 @@
+money totalExpenses(transaction[] items) {
+    money total = $0;
+
+    foreach (transaction t in items) {
+        if (t.kind == "expense") {
+            total = total + t.amount;
+        }
+    }
+
+    return total;
+}
+
+transaction groceries;
+groceries.amount = $250;
+groceries.category = "food";
+groceries.kind = "expense";
+groceries.note = "Weekly groceries";
+
+transaction salary;
+salary.amount = $2000;
+salary.category = "job";
+salary.kind = "income";
+salary.note = "Part time salary";
+
+transaction[] records = [groceries, salary];
+money spent = totalExpenses(records);
+budget "Food limit" $300;
+track groceries;
+track salary;
+
+if (spent > $200) {
+    budget "Spent" spent;
+} else {
+    budget "Status" $0;
+}

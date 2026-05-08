@@ -1,0 +1,5 @@
+money spent = $200;
+
+if spent > $100) {
+    budget "Spent" spent;
+}

@@ -1,0 +1,12 @@
+money totalExpenses(transaction[] items) {
+    money total = $0;
+
+    foreach (transaction t in items) {
+        if (t.kind == "expense") {
+            total = total + t.amount;
+        }
+    }
+
+    return total;
+
+money limit = $500;

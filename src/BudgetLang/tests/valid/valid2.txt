@@ -1,0 +1,36 @@
+money totalIncome(transaction[] items) {
+    money total = $0;
+
+    foreach (transaction t in items) {
+        if (t.kind == "income") {
+            total = total + t.amount;
+        }
+    }
+
+    return total;
+}
+
+transaction freelance;
+freelance.amount = $900;
+freelance.category = "sidejob";
+freelance.kind = "income";
+freelance.note = "Website project";
+
+transaction bonus;
+bonus.amount = $400;
+bonus.category = "reward";
+bonus.kind = "income";
+bonus.note = "Semester bonus";
+
+transaction[] incomes = [freelance, bonus];
+money total = totalIncome(incomes);
+int month = 5;
+
+switch (month) {
+    case 5:
+        budget "May income" total;
+    default:
+        track freelance;
+}
+
+track bonus;

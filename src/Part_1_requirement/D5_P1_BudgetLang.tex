@@ -1,0 +1,30 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\title{CSE 341 Part 1 Retrospective\\BudgetLang}
+\author{Student ID: \texttt{210104004817}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{D5 Retrospective [P1]}
+Part 1 of BudgetLang is in a good state overall. The main parts that are working are the language design, the lexical structure, the EBNF grammar, and the lexer and parser implementation. I was able to define a clear budgeting-focused language with transactions, arrays of transactions, functions, conditionals, \texttt{foreach} loops, \texttt{switch} statements, and the domain-specific commands \texttt{budget} and \texttt{track}. The parser now accepts valid programs, produces a printable AST, and reports syntax errors with line and column information. I also prepared three valid example programs and five malformed programs to test the parser behavior.
+
+The hardest part of Part 1 was turning the language idea into a precise grammar and making sure the implementation matched the written specification. At first, it was easy to think about the language informally, but much harder to express it in a way that was unambiguous and parser-friendly. Another challenge was keeping consistency between the design document, the lexer, the parser, and the example programs. Small mismatches, such as comment syntax, string rules, or internal boolean results, showed me that even a small language needs careful checking.
+
+In Part 2, I want to improve the project by strengthening the semantic side of the language. My main goals are to finalize the type-checking rules, make the interpreter more complete, and keep the implementation fully consistent with the written design. I also want to improve the documentation and testing so that the final version is easier to explain and defend in the written exam.
+
+\end{document}

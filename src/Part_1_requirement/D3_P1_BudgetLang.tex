@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xurl}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\lstdefinelanguage{BudgetLang}{
+  morekeywords={money,int,string,transaction,if,else,foreach,in,return,budget,track,switch,case,default},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]"
+}
+
+\lstset{
+  language=BudgetLang,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{teal!70!black},
+  commentstyle=\color{gray},
+  showstringspaces=false,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible
+}
+
+\title{CSE 341 Part 1 Test Report\\BudgetLang}
+\author{Student ID: \texttt{210104004817}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{5.1 Overview [P1]}
+This report presents the Part 1 parser tests for BudgetLang. The goal of the test set is to show that the lexer and recursive-descent parser accept valid programs, construct a printable abstract syntax tree (AST), and reject malformed programs with useful error messages that include location information. This matches Sebesta's description of compiler front ends and parser responsibilities: lexical analysis produces tokens for syntax analysis, and syntax analysis must both build program structure and detect syntax errors (\S4.2, \S4.3.1, \S4.4).
+
+All tests were run with the command below:
+
+\begin{verbatim}
+dotnet run --project src/BudgetLang -- --ast <test-file>
+\end{verbatim}
+
+For valid programs, the command printed an AST. For malformed programs, the command printed a parser error with a line and column number.
+
+\section*{5.2 Valid Programs [P1]}
+Table~\ref{tab:valid-summary} summarizes the three valid BudgetLang programs used for parser testing. Each program is non-trivial in the sense that it uses multiple language constructs rather than only a single statement form.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.16\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.26\textwidth}}
+\toprule
+\textbf{File} & \textbf{What the program demonstrates} & \textbf{Result} \\
+\midrule
+\texttt{valid1.txt} & Function declaration, \texttt{foreach}, \texttt{if/else}, transaction field assignments, array literal, function call, \texttt{budget}, and \texttt{track}. & Parsed successfully and produced a printable AST. \\
+\texttt{valid2.txt} & Function declaration, transaction array construction, function call, \texttt{switch}, \texttt{case}, \texttt{default}, \texttt{budget}, and \texttt{track}. & Parsed successfully and produced a printable AST. \\
+\texttt{valid3.txt} & Function declaration, expense aggregation, array literal, money comparison, \texttt{if/else}, nested transaction creation, and multiple \texttt{track} statements. & Parsed successfully and produced a printable AST. \\
+\bottomrule
+\end{tabularx}
+\caption{Summary of valid parser tests}
+\label{tab:valid-summary}
+\end{table}
+
+\subsection*{Valid Program 1}
+This program computes total expenses from a transaction array and compares the result against a money threshold. It demonstrates that the parser handles nested block structure, field access, binary expressions, and a function call in the same source file.
+
+\lstinputlisting{../BudgetLang/tests/valid/valid1.txt}
+
+\subsection*{Valid Program 2}
+This program computes total income and then uses a \texttt{switch} statement to report a monthly result. It demonstrates that the parser correctly recognizes \texttt{case} and \texttt{default} clauses as part of the switch syntax.
+
+\lstinputlisting{../BudgetLang/tests/valid/valid2.txt}
+
+\subsection*{Valid Program 3}
+This program computes expenses, compares the total with a spending limit, and conditionally creates an alert transaction. It demonstrates that the parser handles another combination of expressions, declarations, and control flow while preserving the AST structure.
+
+\lstinputlisting{../BudgetLang/tests/valid/valid3.txt}
+
+To keep the report concise, only a short AST excerpt is shown below. The full AST was printed successfully for each valid program at the terminal.
+
+\begin{verbatim}
+Program
+  Functions
+    Function totalExpenses : money
+      Parameters
+        items : transaction[]
+\end{verbatim}
+
+This output confirms that parsing does not stop at token recognition: the parser constructs a tree-shaped representation of program structure, which is the central purpose of syntax analysis in Sebesta's presentation (\S4.3.1, \S4.4).
+
+\section*{5.3 Malformed Programs [P1]}
+Table~\ref{tab:invalid-summary} shows five malformed programs together with the exact parser error message reported by the implementation. Each invalid test contains a targeted syntax mistake so that the error behavior is easy to explain.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} >{\raggedright\arraybackslash}p{0.22\textwidth} >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{File} & \textbf{Syntax problem} & \textbf{Parser output} \\
+\midrule
+\path{invalid1_missing_semicolon.txt} & Missing semicolon after a variable declaration. & \path{Parser error at line 3, column 1: Expected ';' after variable declaration.} \\
+\path{invalid2_missing_closing_brace.txt} & Function block is not closed before the next declaration. & \path{Parser error at line 13, column 1: Unexpected token 'end of file' at the start of a statement.} \\
+\path{invalid3_bad_if_header.txt} & Missing opening parenthesis after \texttt{if}. & \path{Parser error at line 3, column 4: Expected '(' after 'if'.} \\
+\path{invalid4_broken_field_assignment.txt} & Field assignment has a dot but no field name. & \path{Parser error at line 3, column 7: Expected field name after '.'.} \\
+\path{invalid5_missing_right_paren_call.txt} & Function call is missing the closing right parenthesis. & \path{Parser error at line 7, column 36: Expected ')' after argument list.} \\
+\bottomrule
+\end{tabularx}
+\caption{Malformed parser tests and reported errors}
+\label{tab:invalid-summary}
+\end{table}
+
+\subsection*{Malformed Program Listings}
+
+\subsubsection*{Invalid 1: Missing semicolon}
+\lstinputlisting[frame=none]{../BudgetLang/tests/invalid/invalid1_missing_semicolon.txt}
+
+\subsubsection*{Invalid 2: Missing closing brace}
+\lstinputlisting[frame=none]{../BudgetLang/tests/invalid/invalid2_missing_closing_brace.txt}
+
+\subsubsection*{Invalid 3: Bad \texttt{if} header}
+\lstinputlisting[frame=none]{../BudgetLang/tests/invalid/invalid3_bad_if_header.txt}
+
+\subsubsection*{Invalid 4: Broken field assignment}
+\lstinputlisting[frame=none]{../BudgetLang/tests/invalid/invalid4_broken_field_assignment.txt}
+
+\subsubsection*{Invalid 5: Missing right parenthesis}
+\lstinputlisting[frame=none]{../BudgetLang/tests/invalid/invalid5_missing_right_paren_call.txt}
+
+These results show that the parser does not only accept correct input; it also rejects malformed input at the point where the grammar expectation fails. This behavior is consistent with Sebesta's description that parsers must identify syntax errors while processing the token stream (\S4.3.1).
+
+\section*{5.4 Conclusion [P1]}
+The Part 1 parser tests support the claim that BudgetLang's lexer and parser are functioning for the declared subset. The valid tests show that the implementation accepts non-trivial programs and produces a printable AST, while the malformed tests show that syntax errors are detected with clear diagnostic messages and source locations. This gives a usable front end for Part 1 and provides a strong base for extending the implementation with static semantics and interpretation in Part 2.
+
+\end{document}

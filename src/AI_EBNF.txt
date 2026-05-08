@@ -1,0 +1,196 @@
+(* ================================================================= *)
+(* BudgetLang EBNF Grammar — AI-Generated (Claude Opus 4.6)          *)
+(* Generated from: lexical structure, token list, and sample code    *)
+(* Date: 2026-05-08                                                  *)
+(* ================================================================= *)
+(*                                                                   *)
+(* Language summary (the "one-paragraph description" used as input):  *)
+(*                                                                   *)
+(* BudgetLang is a statically typed, imperative domain-specific       *)
+(* language for personal finance management. It provides four         *)
+(* built-in types — money (literals prefixed with $), int, string,    *)
+(* and transaction (a record with fields: amount, category, kind,     *)
+(* note) — plus one-dimensional arrays written as type[]. The        *)
+(* language supports variable declarations with optional              *)
+(* initialization, assignment to variables and record fields via     *)
+(* dot notation, arithmetic (+, -, *, /) and comparison (==, !=,     *)
+(* <, >, <=, >=) operators, user-defined functions with parameters   *)
+(* and return statements, and control flow via if/else, foreach-in   *)
+(* loops over arrays, and switch/case/default. Two domain-specific   *)
+(* commands exist: "budget" (associates a label with an amount) and  *)
+(* "track" (records a transaction). Statements are semicolon-        *)
+(* terminated, blocks are brace-delimited, and the top level of a   *)
+(* program is a sequence of statements and function definitions.     *)
+(*                                                                   *)
+(* ================================================================ *)
+
+
+(* ======================== *)
+(*   1. PROGRAM STRUCTURE   *)
+(* ======================== *)
+
+<program>        ::= { <function_def> | <statement> }
+
+<function_def>   ::= <type> IDENTIFIER "(" [ <param_list> ] ")" <block>
+
+<param_list>     ::= <param> { "," <param> }
+
+<param>          ::= <type> IDENTIFIER
+
+<block>          ::= "{" { <statement> } "}"
+
+
+(* ======================== *)
+(*   2. TYPE SYSTEM         *)
+(* ======================== *)
+
+<type>           ::= <base_type> [ "[" "]" ]
+
+<base_type>      ::= "money"
+                   | "int"
+                   | "string"
+                   | "transaction"
+
+
+(* ======================== *)
+(*   3. STATEMENTS          *)
+(* ======================== *)
+
+<statement>      ::= <var_decl> ";"
+                   | <assignment> ";"
+                   | <if_stmt>
+                   | <foreach_stmt>
+                   | <switch_stmt>
+                   | <return_stmt> ";"
+                   | <budget_stmt> ";"
+                   | <track_stmt> ";"
+                   | <expr_stmt> ";"
+
+<var_decl>       ::= <type> IDENTIFIER [ "=" <expression> ]
+
+<assignment>     ::= <lvalue> "=" <expression>
+
+<lvalue>         ::= IDENTIFIER { "." IDENTIFIER }
+
+<if_stmt>        ::= "if" "(" <expression> ")" <block> [ "else" <block> ]
+
+<foreach_stmt>   ::= "foreach" "(" <type> IDENTIFIER "in" <expression> ")" <block>
+
+<switch_stmt>    ::= "switch" "(" <expression> ")" "{" { <case_clause> } [ <default_clause> ] "}"
+
+<case_clause>    ::= "case" <literal> ":" { <statement> }
+
+<default_clause> ::= "default" ":" { <statement> }
+
+<return_stmt>    ::= "return" <expression>
+
+<budget_stmt>    ::= "budget" STRING_LITERAL <expression>
+
+<track_stmt>     ::= "track" <expression>
+
+<expr_stmt>      ::= <expression>
+
+
+(* ============================================ *)
+(*   4. EXPRESSIONS (precedence low → high)     *)
+(* ============================================ *)
+(*                                               *)
+(*   Level 1 (lowest) : Comparison  ==  !=  <  > <=  >=    *)
+(*   Level 2          : Additive    +  -                    *)
+(*   Level 3          : Multiplicative  *  /                *)
+(*   Level 4          : Unary minus  -                      *)
+(*   Level 5 (highest): Member access  .                    *)
+(*   Level 6          : Primary (literals, ids, calls,      *)
+(*                      array literals, parenthesized)      *)
+(*                                               *)
+(* ============================================ *)
+
+<expression>     ::= <comparison>
+
+<comparison>     ::= <additive> [ <comp_op> <additive> ]
+
+<comp_op>        ::= "==" | "!=" | "<" | ">" | "<=" | ">="
+
+<additive>       ::= <multiplicative> { ("+" | "-") <multiplicative> }
+
+<multiplicative> ::= <unary> { ("*" | "/") <unary> }
+
+<unary>          ::= "-" <unary>
+                   | <member_access>
+
+<member_access>  ::= <primary> { "." IDENTIFIER }
+
+<primary>        ::= IDENTIFIER [ "(" [ <arg_list> ] ")" ]
+                   | <literal>
+                   | "[" [ <arg_list> ] "]"
+                   | "(" <expression> ")"
+
+<arg_list>       ::= <expression> { "," <expression> }
+
+
+(* ======================== *)
+(*   5. LITERALS            *)
+(* ======================== *)
+
+<literal>        ::= MONEY_LITERAL
+                   | INT_LITERAL
+                   | STRING_LITERAL
+
+
+(* ======================== *)
+(*   6. LEXICAL ELEMENTS    *)
+(* ======================== *)
+
+IDENTIFIER       ::= LETTER { LETTER | DIGIT | "_" }
+
+MONEY_LITERAL    ::= "$" DIGIT { DIGIT }
+
+INT_LITERAL      ::= DIGIT { DIGIT }
+
+STRING_LITERAL   ::= '"' { ANY_CHAR - '"' } '"'
+
+LETTER           ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
+
+DIGIT            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+
+(* ================================================================ *)
+(*   NOTES & DESIGN DECISIONS                                       *)
+(* ================================================================ *)
+(*                                                                   *)
+(*  1. PRECEDENCE: Six levels from low to high —                     *)
+(*     comparison < additive < multiplicative < unary < member < primary *)
+(*     This ensures  total + t.amount  parses as  total + (t.amount) *)
+(*     and  a + b > c - d  parses as  (a + b) > (c - d).            *)
+(*                                                                   *)
+(*  2. COMPARISON is NON-ASSOCIATIVE: I used [ ] not { } to prevent *)
+(*     chaining like  a > b > c,  which is semantically dubious     *)
+(*     without a boolean type.                                       *)
+(*                                                                   *)
+(*  3. ADDITIVE/MULTIPLICATIVE are LEFT-ASSOCIATIVE via { } on the  *)
+(*     right operand, so  a - b - c  =  (a - b) - c.                *)
+(*                                                                   *)
+(*  4. ARRAYS: Only one-dimensional arrays are supported, enforced   *)
+(*     by the optional  [ "[" "]" ]  on <type>.                      *)
+(*                                                                   *)
+(*  5. MEMBER ACCESS (.): Placed above primary so that  t.amount     *)
+(*     binds tighter than arithmetic. However, this grammar does NOT *)
+(*     support method calls on objects (e.g., obj.method(args)),     *)
+(*     only field access. This is a deliberate simplification since  *)
+(*     the language appears to use free functions, not methods.       *)
+(*                                                                   *)
+(*  6. ASSIGNMENT vs DECLARATION: Disambiguated at parse time by     *)
+(*     whether the statement begins with a type keyword (→ var_decl) *)
+(*     or an identifier (→ assignment / expr_stmt). Since all type   *)
+(*     keywords are reserved, this is LL(1)-friendly.                *)
+(*                                                                   *)
+(*  7. switch/case: Cases use literal values only, no expressions.   *)
+(*     No "break" keyword is included — semantics are assumed to be  *)
+(*     implicit break (no fall-through).                             *)
+(*                                                                   *)
+(*  8. DOMAIN COMMANDS: "budget" takes a string label followed by    *)
+(*     any expression; "track" takes any expression. I chose general *)
+(*     expressions for flexibility, though the samples only show     *)
+(*     identifiers.                                                  *)
+(*                                                                   *)
+(* ================================================================ *)

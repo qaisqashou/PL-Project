@@ -1,0 +1,3 @@
+money total = $100
+
+budget "Limit" total;

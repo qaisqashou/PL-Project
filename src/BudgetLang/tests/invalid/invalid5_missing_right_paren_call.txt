@@ -1,0 +1,7 @@
+money totalExpenses(transaction[] items) {
+    money total = $0;
+    return total;
+}
+
+transaction[] records = [];
+money spent = totalExpenses(records;
