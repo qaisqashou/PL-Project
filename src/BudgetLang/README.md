@@ -25,16 +25,17 @@ Current assumptions to revisit before final D2 submission:
 - `switch` uses no fall-through; only the first matching case runs, otherwise `default` runs.
 - Empty array literals are not supported yet.
 
-Run:
+Run from the `BudgetLang` project directory (this folder in the repo, or the root of the extracted D2 zip):
 
 ```powershell
-dotnet run --project src/BudgetLang -- src/small_draft_sample.txt
+dotnet build
+dotnet run --project . -- tests/valid/valid1.txt
 ```
 
 Print the AST only:
 
 ```powershell
-dotnet run --project src/BudgetLang -- --ast src/small_draft_sample.txt
+dotnet run --project . -- --ast tests/valid/valid1.txt
 ```
 
 Parser tests:
@@ -42,19 +43,19 @@ Parser tests:
 Valid programs:
 
 ```powershell
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/valid/valid1.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/valid/valid2.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/valid/valid3.txt
+dotnet run --project . -- --ast tests/valid/valid1.txt
+dotnet run --project . -- --ast tests/valid/valid2.txt
+dotnet run --project . -- --ast tests/valid/valid3.txt
 ```
 
 Malformed programs:
 
 ```powershell
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/invalid/invalid1_missing_semicolon.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/invalid/invalid2_missing_closing_brace.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/invalid/invalid3_bad_if_header.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/invalid/invalid4_broken_field_assignment.txt
-dotnet run --project src/BudgetLang -- --ast src/BudgetLang/tests/invalid/invalid5_missing_right_paren_call.txt
+dotnet run --project . -- --ast tests/invalid/invalid1_missing_semicolon.txt
+dotnet run --project . -- --ast tests/invalid/invalid2_missing_closing_brace.txt
+dotnet run --project . -- --ast tests/invalid/invalid3_bad_if_header.txt
+dotnet run --project . -- --ast tests/invalid/invalid4_broken_field_assignment.txt
+dotnet run --project . -- --ast tests/invalid/invalid5_missing_right_paren_call.txt
 ```
 
 Suggested next steps:
